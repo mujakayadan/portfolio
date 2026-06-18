@@ -34,7 +34,7 @@ A modern, interactive portfolio website built with React, Three.js, and TypeScri
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/mucahitkayadan/react-threejs-portfolio.git
+git clone https://github.com/mujakayadan/react-threejs-portfolio.git
 cd react-threejs-portfolio
 ```
 

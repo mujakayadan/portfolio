@@ -6,7 +6,7 @@ export const mockYarbaPortfolioContent: YarbaPortfolioContent = {
     email: 'mujakayadan@outlook.com',
     phone: '(641) 233-9607',
     linkedin: 'https://www.linkedin.com/in/muja-kayadan/',
-    github: 'https://github.com/mucahitkayadan',
+    github: 'https://github.com/mujakayadan',
     website: 'https://mujakayadan.com',
     profile_picture_url: null,
   },

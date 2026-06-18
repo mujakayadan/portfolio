@@ -1,11 +1,13 @@
 # React Three.js Portfolio Documentation
 
 ## Project Overview
+
 This is a modern portfolio website built with React, Three.js, and TypeScript. It features 3D animations, interactive components, and a responsive design.
 
 ## Architecture
 
 ### Tech Stack
+
 - **Frontend Framework**: React 18 with TypeScript
 - **3D Graphics**: Three.js with React Three Fiber
 - **Styling**: Tailwind CSS
@@ -16,6 +18,7 @@ This is a modern portfolio website built with React, Three.js, and TypeScript. I
 - **CI/CD**: GitHub Actions
 
 ### Directory Structure
+
 ```
 react-threejs-portfolio/
 ├── src/
@@ -36,7 +39,9 @@ react-threejs-portfolio/
 ```
 
 ### Key Components
+
 1. **Canvas Components** (`src/components/canvas/`)
+
    - `Ball.tsx`: Interactive 3D ball component
    - `Earth.tsx`: 3D Earth model component
    - `Stars.tsx`: Background stars effect
@@ -53,14 +58,16 @@ react-threejs-portfolio/
 ## Development Setup
 
 ### Prerequisites
+
 - Node.js (v18 or higher)
 - npm or yarn
 - Git
 
 ### Installation
+
 ```bash
 # Clone the repository
-git clone https://github.com/mucahitkayadan/react-threejs-portfolio.git
+git clone https://github.com/mujakayadan/react-threejs-portfolio.git
 cd react-threejs-portfolio
 
 # Install dependencies
@@ -70,6 +77,7 @@ yarn install
 ```
 
 ### Running the Development Server
+
 ```bash
 # Start development server
 npm run dev
@@ -78,6 +86,7 @@ yarn dev
 ```
 
 ### Building for Production
+
 ```bash
 # Create production build
 npm run build
@@ -93,7 +102,9 @@ yarn preview
 ## Type Checking and Linting
 
 ### TypeScript Configuration
+
 The project uses TypeScript for type safety. Configuration is in `tsconfig.json`:
+
 ```json
 {
   "compilerOptions": {
@@ -101,13 +112,14 @@ The project uses TypeScript for type safety. Configuration is in `tsconfig.json`
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "jsx": "react-jsx",
-    "strict": true,
+    "strict": true
     // ... other options
   }
 }
 ```
 
 ### Running Type Checks
+
 ```bash
 # Run TypeScript type checking
 npm run ts:check
@@ -116,20 +128,23 @@ yarn ts:check
 ```
 
 ### ESLint Configuration
+
 ESLint is configured for code quality and consistency. Configuration in `.eslintrc.js`:
+
 ```javascript
 module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
-    'plugin:react-hooks/recommended'
+    'plugin:react-hooks/recommended',
   ],
   // ... other options
-}
+};
 ```
 
 ### Running Linting
+
 ```bash
 # Run ESLint
 npm run lint
@@ -145,6 +160,7 @@ yarn lint:fix
 ## CI/CD Pipeline
 
 ### GitHub Actions Workflow
+
 The project uses GitHub Actions for CI/CD. The workflow is defined in `.github/workflows/`:
 
 ```yaml
@@ -152,9 +168,9 @@ name: CI/CD
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
@@ -176,7 +192,9 @@ jobs:
 ```
 
 ### Deployment
+
 The project can be deployed to various platforms:
+
 - Vercel (recommended)
 - GitHub Pages
 - Netlify
@@ -185,6 +203,7 @@ The project can be deployed to various platforms:
 ## Git Workflow
 
 ### Branch Strategy
+
 - `main`: Production-ready code
 - `develop`: Development branch
 - `feature/*`: New features
@@ -192,6 +211,7 @@ The project can be deployed to various platforms:
 - `hotfix/*`: Urgent production fixes
 
 ### Common Git Commands
+
 ```bash
 # Create a new feature branch
 git checkout -b feature/new-feature
@@ -213,7 +233,9 @@ git merge main
 ```
 
 ### Commit Message Convention
+
 We follow the Conventional Commits specification:
+
 - `feat:` New features
 - `fix:` Bug fixes
 - `docs:` Documentation changes
@@ -225,17 +247,21 @@ We follow the Conventional Commits specification:
 ## Performance Optimization
 
 ### Code Splitting
+
 The application uses dynamic imports for route-based code splitting:
+
 ```typescript
 const About = React.lazy(() => import('./components/About'));
 ```
 
 ### Asset Optimization
+
 - Images are optimized and served in WebP format
 - 3D models are compressed and loaded asynchronously
 - Tailwind CSS purges unused styles in production
 
 ### Monitoring
+
 - Vercel Analytics for performance monitoring
 - React DevTools for component profiling
 - Lighthouse for performance auditing
@@ -243,11 +269,14 @@ const About = React.lazy(() => import('./components/About'));
 ## Troubleshooting
 
 ### Common Issues
+
 1. **Three.js Model Loading**
+
    - Ensure models are in the correct format (GLTF/GLB)
    - Check model paths in development and production
 
 2. **TypeScript Errors**
+
    - Run `npm run ts:check` to identify type issues
    - Check @types packages are installed for dependencies
 
@@ -256,6 +285,7 @@ const About = React.lazy(() => import('./components/About'));
    - Update dependencies: `npm update`
 
 ## Contributing
+
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
@@ -263,4 +293,5 @@ const About = React.lazy(() => import('./components/About'));
 5. Submit a pull request
 
 ## License
-This project is licensed under the MIT License - see the LICENSE file for details. 
+
+This project is licensed under the MIT License - see the LICENSE file for details.

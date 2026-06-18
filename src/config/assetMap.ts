@@ -227,7 +227,7 @@ export const getProjectImage = (name: string): string =>
 export const getAwardIcon = (name: string): string => lookup(awardIcons, name, placeholder);
 
 export const getSkillMeta = (name: string): { icon: string; url: string } =>
-  lookup(skillMeta, name, { icon: placeholder, url: 'https://github.com/mucahitkayadan' });
+  lookup(skillMeta, name, { icon: placeholder, url: 'https://github.com/mujakayadan' });
 
 export const getProjectTags = (
   name: string,
