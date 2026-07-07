@@ -299,7 +299,7 @@ const ChatBot = () => {
                 }
               }}
               placeholder="Type your message..."
-              className="flex-1 resize-none border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[40px] max-h-[150px] overflow-y-auto"
+              className="flex-1 resize-none border rounded-lg p-2 bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[40px] max-h-[150px] overflow-y-auto"
               rows={1}
             />
             <button
