@@ -21,10 +21,9 @@ jobs:
     - name: Create Production Environment File
       run: |
         echo "VITE_LAMBDA_EMAIL_URL=${{ secrets.VITE_LAMBDA_EMAIL_URL }}" > .env.production
-        echo "VITE_LAMBDA_URL=${{ secrets.VITE_LAMBDA_URL }}" >> .env.production
-        echo "VITE_API_GATEWAY_URL=${{ secrets.VITE_API_GATEWAY_URL }}" >> .env.production
         echo "VITE_YARBA_API_URL=${{ secrets.VITE_YARBA_API_URL }}" >> .env.production
         echo "VITE_YARBA_PORTFOLIO_TOKEN=${{ secrets.VITE_YARBA_PORTFOLIO_TOKEN }}" >> .env.production
+        echo "VITE_YARBA_PORTFOLIO_SUBDOMAIN=${{ secrets.VITE_YARBA_PORTFOLIO_SUBDOMAIN }}" >> .env.production
 
     - name: Install Dependencies
       run: npm install

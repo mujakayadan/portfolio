@@ -5,8 +5,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComment, faTimes, faExpand, faCompress } from '@fortawesome/free-solid-svg-icons';
 
 import { chat_background, notificationSound } from '../assets';
-
-const API_URL = import.meta.env.VITE_API_GATEWAY_URL;
+import {
+  PortfolioChatApiError,
+  sendPortfolioChatMessage,
+  type PortfolioChatHistoryMessage,
+} from '../services/portfolioChatApi';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -15,8 +18,30 @@ interface ChatMessage {
   isLoading?: boolean;
 }
 
+const CONVERSATION_STORAGE_KEY = 'portfolio_chat_conversation_id';
+
 const processMessageContent = (content: string) =>
   content.replace(/(https?:\/\/[^\s]+)/g, '[$1]($1)');
+
+const isSchedulingRelated = (content: string) => {
+  const lowered = content.toLowerCase();
+  return (
+    lowered.includes('calendly.com') ||
+    lowered.includes('schedule') ||
+    lowered.includes('appointment') ||
+    lowered.includes('book a call') ||
+    lowered.includes('book a meeting')
+  );
+};
+
+const buildHistory = (messages: ChatMessage[]): PortfolioChatHistoryMessage[] =>
+  messages
+    .filter(message => message.role === 'user' || message.role === 'assistant')
+    .filter(message => !message.isLoading)
+    .map(message => ({
+      role: message.role,
+      content: message.content,
+    }));
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,7 +57,9 @@ const ChatBot = () => {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef(new Audio(notificationSound));
-  const [threadId, setThreadId] = useState<string | null>(null);
+  const [conversationId, setConversationId] = useState<string | null>(() =>
+    sessionStorage.getItem(CONVERSATION_STORAGE_KEY)
+  );
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -83,46 +110,39 @@ const ChatBot = () => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
     }
-    setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+
+    const nextMessages: ChatMessage[] = [...messages, { role: 'user', content: userMessage }];
+    setMessages(nextMessages);
 
     try {
       setIsLoading(true);
 
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message: userMessage,
-          threadId,
-        }),
+      const data = await sendPortfolioChatMessage({
+        subdomain: import.meta.env.VITE_YARBA_PORTFOLIO_SUBDOMAIN,
+        message: userMessage,
+        conversation_id: conversationId,
+        history: buildHistory(nextMessages.slice(0, -1)),
       });
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const data = await response.json();
-      const parsedBody = JSON.parse(data.body) as {
-        response: string;
-        threadId: string;
-        isCalendarRelated?: boolean;
-      };
-
-      const processedResponse = processMessageContent(parsedBody.response);
+      const processedResponse = processMessageContent(data.response);
 
       setMessages(prev => [
         ...prev,
         {
           role: 'assistant',
           content: processedResponse,
-          isCalendarRelated: parsedBody.isCalendarRelated,
+          isCalendarRelated: isSchedulingRelated(processedResponse),
         },
       ]);
-      setThreadId(parsedBody.threadId);
+      setConversationId(data.conversation_id);
+      sessionStorage.setItem(CONVERSATION_STORAGE_KEY, data.conversation_id);
     } catch (error) {
       console.error('Error:', error);
+      const fallbackMessage =
+        error instanceof PortfolioChatApiError && error.status === 403
+          ? 'The chat assistant is not available right now.'
+          : 'Sorry, I had trouble responding. Please try again in a moment.';
+      setMessages(prev => [...prev, { role: 'assistant', content: fallbackMessage }]);
     } finally {
       setIsLoading(false);
     }
