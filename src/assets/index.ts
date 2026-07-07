@@ -1,7 +1,6 @@
 /* eslint-disable import/order */
 // My Images
 import profilepic from './pfp.png';
-import logo from './logo0.webp';
 import chat_background from './chat_background.png';
 import notificationSound from './notification.wav';
 import github from './github.svg';
@@ -109,7 +108,6 @@ import tubitak from './awards/tubitak.svg';
 
 export {
   profilepic,
-  logo,
   chat_background,
   notificationSound,
   python,
