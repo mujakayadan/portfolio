@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
@@ -73,18 +73,12 @@ const ProjectCard = ({
 const Projects = () => {
   const { projects } = usePortfolio();
   const [visibleProjects, setVisibleProjects] = useState(6);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const loadMore = useCallback(async () => {
-    if (isLoading) return;
-    setIsLoading(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      setVisibleProjects(prev => Math.min(prev + 6, projects.length));
-    } finally {
-      setIsLoading(false);
-    }
-  }, [isLoading, projects.length]);
+  const hasMoreProjects = visibleProjects < projects.length;
+
+  const loadMore = () => {
+    setVisibleProjects(current => Math.min(current + 6, projects.length));
+  };
 
   return (
     <div className="relative z-0">
@@ -95,13 +89,13 @@ const Projects = () => {
 
       <div className="mt-20 flex flex-wrap gap-7 justify-center">
         {projects.slice(0, visibleProjects).map((project, index) => (
-          <ProjectCard key={`project-${index}`} {...project} />
+          <ProjectCard key={`${project.name}-${index}`} {...project} />
         ))}
       </div>
 
-      {visibleProjects < projects.length && (
+      {hasMoreProjects && (
         <motion.div
-          className="flex justify-center mt-10"
+          className="relative z-10 flex justify-center mt-10"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -109,20 +103,13 @@ const Projects = () => {
           <button
             type="button"
             onClick={loadMore}
-            disabled={isLoading}
             className="group bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl flex items-center gap-3"
           >
-            {isLoading ? (
-              'Loading...'
-            ) : (
-              <>
-                Load More Projects
-                <FontAwesomeIcon
-                  icon={faArrowDown}
-                  className="transition-transform duration-300 group-hover:translate-y-1"
-                />
-              </>
-            )}
+            Load More Projects
+            <FontAwesomeIcon
+              icon={faArrowDown}
+              className="transition-transform duration-300 group-hover:translate-y-1"
+            />
           </button>
         </motion.div>
       )}
