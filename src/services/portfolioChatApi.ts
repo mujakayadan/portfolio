@@ -4,7 +4,6 @@ export interface PortfolioChatHistoryMessage {
 }
 
 export interface PortfolioChatRequest {
-  subdomain: string;
   message: string;
   conversation_id?: string | null;
   history?: PortfolioChatHistoryMessage[];

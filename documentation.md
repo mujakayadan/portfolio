@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This is a modern portfolio website built with React, Three.js, and TypeScript. It features 3D animations, interactive components, and a responsive design.
+This is a modern portfolio website built with React, Three.js, and TypeScript. It features 3D animations, interactive components, and a responsive design. Live portfolio content and the chat assistant are powered by [YARBA](https://www.yarba.app/).
 
 ## Architecture
 
@@ -13,29 +13,30 @@ This is a modern portfolio website built with React, Three.js, and TypeScript. I
 - **Styling**: Tailwind CSS
 - **Build Tool**: Vite
 - **Type Checking**: TypeScript
-- **Linting**: ESLint
-- **Package Manager**: npm/yarn
+- **Linting**: ESLint (`.eslintrc.js`)
+- **Testing**: Vitest
 - **CI/CD**: GitHub Actions
+- **Hosting**: AWS S3 + CloudFront
+- **Portfolio + Chat API**: YARBA
+- **Contact Form**: mailto link (owner email from YARBA profile)
 
 ### Directory Structure
 
 ```
-react-threejs-portfolio/
+muja-kayadan-portfolio/
 ├── src/
 │   ├── assets/          # Static assets (images, 3D models)
 │   ├── components/      # React components
-│   │   ├── canvas/     # Three.js canvas components
-│   │   └── ...         # Other components
-│   ├── constants/      # Constants and configuration
-│   ├── hoc/           # Higher-order components
-│   ├── utils/         # Utility functions
-│   ├── App.tsx        # Main application component
-│   ├── main.tsx       # Application entry point
-│   └── styles.ts      # Global styles and types
-├── public/            # Public assets
-├── .github/           # GitHub Actions workflows
-├── dist/             # Build output
-└── ...               # Config files
+│   │   └── canvas/      # Three.js canvas components
+│   ├── config/          # Skills and asset configuration
+│   ├── context/         # Portfolio context provider
+│   ├── services/        # API clients (portfolio, chat)
+│   ├── test/            # Vitest tests
+│   └── utils/           # Utility functions
+├── public/              # Public assets and 3D models
+├── design/              # Architecture diagrams
+├── .github/workflows/   # CI and deploy pipelines
+└── dist/                # Build output
 ```
 
 ### Key Components
@@ -48,193 +49,128 @@ react-threejs-portfolio/
    - `Computers.tsx`: 3D computer model
 
 2. **Core Components**
+
    - `About.tsx`: About section with animations
-   - `Contact.tsx`: Contact form with email integration
+   - `ChatBot.tsx`: AI assistant chat widget (YARBA API)
+   - `Contact.tsx`: Contact form (mailto using profile email from YARBA)
    - `Hero.tsx`: Hero section with 3D elements
    - `Navbar.tsx`: Navigation component
    - `Loader.tsx`: Loading animation component
    - `ErrorBoundary.tsx`: Error handling component
+
+3. **Services** (`src/services/`)
+   - `portfolioApi.ts`: Fetches live portfolio content from YARBA
+   - `portfolioChatApi.ts`: Sends chat messages to YARBA public portfolio chat
 
 ## Development Setup
 
 ### Prerequisites
 
 - Node.js (v18 or higher)
-- npm or yarn
+- npm
 - Git
 
 ### Installation
 
 ```bash
-# Clone the repository
 git clone https://github.com/mujakayadan/react-threejs-portfolio.git
 cd react-threejs-portfolio
-
-# Install dependencies
 npm install
-# or
-yarn install
+cp .env.example .env
 ```
+
+### Environment Variables
+
+| Variable                         | Purpose                  |
+| -------------------------------- | ------------------------ |
+| `VITE_YARBA_API_URL`             | YARBA API base URL       |
+| `VITE_YARBA_PORTFOLIO_TOKEN`     | Portfolio content token  |
+| `VITE_YARBA_PORTFOLIO_SUBDOMAIN` | Chat assistant subdomain |
 
 ### Running the Development Server
 
 ```bash
-# Start development server
 npm run dev
-# or
-yarn dev
 ```
 
 ### Building for Production
 
 ```bash
-# Create production build
 npm run build
-# or
-yarn build
-
-# Preview production build
 npm run preview
-# or
-yarn preview
 ```
 
 ## Type Checking and Linting
 
-### TypeScript Configuration
-
-The project uses TypeScript for type safety. Configuration is in `tsconfig.json`:
-
-```json
-{
-  "compilerOptions": {
-    "target": "ES2020",
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "jsx": "react-jsx",
-    "strict": true
-    // ... other options
-  }
-}
-```
-
-### Running Type Checks
+### TypeScript
 
 ```bash
-# Run TypeScript type checking
 npm run ts:check
-# or
-yarn ts:check
 ```
 
-### ESLint Configuration
+### ESLint
 
-ESLint is configured for code quality and consistency. Configuration in `.eslintrc.js`:
-
-```javascript
-module.exports = {
-  extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:react/recommended',
-    'plugin:react-hooks/recommended',
-  ],
-  // ... other options
-};
-```
-
-### Running Linting
+Configuration is in `.eslintrc.js`.
 
 ```bash
-# Run ESLint
 npm run lint
-# or
-yarn lint
-
-# Fix auto-fixable issues
 npm run lint:fix
-# or
-yarn lint:fix
+```
+
+### Tests
+
+```bash
+npm run test
 ```
 
 ## CI/CD Pipeline
 
-### GitHub Actions Workflow
+### CI Workflow (`.github/workflows/ci.yml`)
 
-The project uses GitHub Actions for CI/CD. The workflow is defined in `.github/workflows/`:
+Runs on push and pull request to `main`:
 
-```yaml
-name: CI/CD
+- TypeScript type checking
+- ESLint
+- Vitest tests
+- Production build
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+### Deploy Workflow (`.github/workflows/deploy.yml`)
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-      - name: Install dependencies
-        run: npm ci
-      - name: Run type checking
-        run: npm run ts:check
-      - name: Run linting
-        run: npm run lint
-      - name: Build
-        run: npm run build
-```
+Runs on push to `main`:
 
-### Deployment
+1. Creates `.env.production` from GitHub secrets
+2. Builds the site
+3. Syncs `dist/` to S3
+4. Invalidates CloudFront cache
 
-The project can be deployed to various platforms:
+### Required GitHub Secrets
 
-- Vercel (recommended)
-- GitHub Pages
-- Netlify
-- AWS S3 + CloudFront
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`
+- `AWS_REGION`
+- `AWS_BUCKET_NAME`
+- `CLOUDFRONT_DISTRIBUTION_ID`
+- `VITE_YARBA_API_URL`
+- `VITE_YARBA_PORTFOLIO_TOKEN`
+- `VITE_YARBA_PORTFOLIO_SUBDOMAIN`
+
+## Deployment Architecture
+
+See `design/aws_architecture.mmd` for the current diagram. In summary:
+
+- **Route 53 + ACM + CloudFront + S3** serve the static React app
+- **YARBA API** provides portfolio sections and chat responses
+- **Contact form** opens the visitor's email app with a prefilled message
 
 ## Git Workflow
 
 ### Branch Strategy
 
 - `main`: Production-ready code
-- `develop`: Development branch
 - `feature/*`: New features
 - `bugfix/*`: Bug fixes
-- `hotfix/*`: Urgent production fixes
-
-### Common Git Commands
-
-```bash
-# Create a new feature branch
-git checkout -b feature/new-feature
-
-# Stage changes
-git add .
-
-# Commit changes
-git commit -m "feat: add new feature"
-
-# Push to remote
-git push origin feature/new-feature
-
-# Update from main
-git checkout main
-git pull
-git checkout feature/new-feature
-git merge main
-```
 
 ### Commit Message Convention
-
-We follow the Conventional Commits specification:
 
 - `feat:` New features
 - `fix:` Bug fixes
@@ -246,51 +182,29 @@ We follow the Conventional Commits specification:
 
 ## Performance Optimization
 
-### Code Splitting
-
-The application uses dynamic imports for route-based code splitting:
-
-```typescript
-const About = React.lazy(() => import('./components/About'));
-```
-
-### Asset Optimization
-
-- Images are optimized and served in WebP format
-- 3D models are compressed and loaded asynchronously
-- Tailwind CSS purges unused styles in production
-
-### Monitoring
-
-- Vercel Analytics for performance monitoring
-- React DevTools for component profiling
-- Lighthouse for performance auditing
+- Route-based code splitting with `React.lazy`
+- WebP image optimization
+- Async 3D model loading
+- Tailwind CSS purging in production
 
 ## Troubleshooting
 
-### Common Issues
+1. **Chat not responding**
 
-1. **Three.js Model Loading**
+   - Verify `VITE_YARBA_API_URL` and `VITE_YARBA_PORTFOLIO_SUBDOMAIN` are set
+   - Confirm the YARBA site has chatbot enabled
 
-   - Ensure models are in the correct format (GLTF/GLB)
-   - Check model paths in development and production
+2. **Portfolio sections empty**
 
-2. **TypeScript Errors**
+   - Verify `VITE_YARBA_API_URL` and `VITE_YARBA_PORTFOLIO_TOKEN`
 
-   - Run `npm run ts:check` to identify type issues
-   - Check @types packages are installed for dependencies
+3. **TypeScript Errors**
 
-3. **Build Issues**
-   - Clear the build cache: `rm -rf dist/`
-   - Update dependencies: `npm update`
+   - Run `npm run ts:check`
 
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run tests and type checking
-5. Submit a pull request
+4. **Build Issues**
+   - Clear cache: remove `dist/`
+   - Reinstall: `npm ci`
 
 ## License
 

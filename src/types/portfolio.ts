@@ -75,6 +75,7 @@ export interface PortfolioData {
   fullName: string;
   typedItems: string[];
   profilePictureUrl: string;
+  email: string | null;
   linkedin: string | null;
   github: string | null;
   phone: string | null;

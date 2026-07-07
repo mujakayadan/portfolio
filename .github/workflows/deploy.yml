@@ -20,8 +20,7 @@ jobs:
 
     - name: Create Production Environment File
       run: |
-        echo "VITE_LAMBDA_EMAIL_URL=${{ secrets.VITE_LAMBDA_EMAIL_URL }}" > .env.production
-        echo "VITE_YARBA_API_URL=${{ secrets.VITE_YARBA_API_URL }}" >> .env.production
+        echo "VITE_YARBA_API_URL=${{ secrets.VITE_YARBA_API_URL }}" > .env.production
         echo "VITE_YARBA_PORTFOLIO_TOKEN=${{ secrets.VITE_YARBA_PORTFOLIO_TOKEN }}" >> .env.production
         echo "VITE_YARBA_PORTFOLIO_SUBDOMAIN=${{ secrets.VITE_YARBA_PORTFOLIO_SUBDOMAIN }}" >> .env.production
 
@@ -29,15 +28,8 @@ jobs:
       run: npm install
       
     - name: Build
-      run: |
-        npm run build
-        echo "Build contents:"
-        ls -R dist/
-        
-    - name: Check image paths
-      run: |
-        find dist/ -name "*.png"
-      
+      run: npm run build
+
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:

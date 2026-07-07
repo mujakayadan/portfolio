@@ -2,13 +2,15 @@
 
 A modern, interactive portfolio website built with React, Three.js, and TypeScript. Features stunning 3D animations, interactive components, and a responsive design.
 
-## ✨ Features
+Live site: [mujakayadan.com](https://mujakayadan.com)
+
+## Features
 
 - **Interactive 3D Elements**
   - Animated 3D models and scenes
   - Dynamic lighting and effects
   - Responsive 3D components
-  
+
 - **Modern Tech Stack**
   - React 18 with TypeScript for type safety
   - Three.js with React Three Fiber for 3D graphics
@@ -16,45 +18,81 @@ A modern, interactive portfolio website built with React, Three.js, and TypeScri
   - Tailwind CSS for styling
   - Vite for fast development and building
 
+- **YARBA Integration**
+  - Portfolio content loaded from the YARBA API
+  - AI chat assistant powered by YARBA public portfolio chat
+
 - **Performance Optimized**
   - Code splitting and lazy loading
   - Optimized 3D model loading
   - Responsive design for all devices
   - WebP image optimization
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
 - Node.js (v18 or higher)
-- npm or yarn
+- npm
 - Git
 
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/mujakayadan/react-threejs-portfolio.git
 cd react-threejs-portfolio
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
-# or
-yarn install
 ```
 
-3. Start the development server:
+3. Configure environment variables:
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` with your values. See [Environment Variables](#environment-variables) below.
+
+4. Start the development server:
+
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
-4. Open [http://localhost:5173](http://localhost:5173) in your browser
+5. Open [http://localhost:5173](http://localhost:5173) in your browser
 
-## 🛠️ Development
+## Environment Variables
+
+Copy `.env.example` to `.env` for local development.
+
+| Variable | Purpose |
+|----------|---------|
+| `VITE_YARBA_API_URL` | YARBA API base URL for portfolio content and chat |
+| `VITE_YARBA_PORTFOLIO_TOKEN` | Token for fetching live portfolio sections |
+| `VITE_YARBA_PORTFOLIO_SUBDOMAIN` | YARBA site subdomain used by the chat assistant |
+
+Production builds receive these values from GitHub Actions secrets during deploy.
+
+### GitHub Actions Secrets
+
+Required for `.github/workflows/deploy.yml`:
+
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`
+- `AWS_REGION`
+- `AWS_BUCKET_NAME`
+- `CLOUDFRONT_DISTRIBUTION_ID`
+- `VITE_YARBA_API_URL`
+- `VITE_YARBA_PORTFOLIO_TOKEN`
+- `VITE_YARBA_PORTFOLIO_SUBDOMAIN`
+
+## Development
 
 ### Available Scripts
 
@@ -63,26 +101,27 @@ yarn dev
 - `npm run preview` - Preview production build
 - `npm run lint` - Run ESLint
 - `npm run lint:fix` - Fix ESLint issues
+- `npm run test` - Run Vitest tests
 - `npm run ts:check` - Run TypeScript type checking
 - `npm run format` - Format code with Prettier
-- `npm run validate` - Run all checks (types, lint, build)
+- `npm run validate` - Run all checks (types, lint, test, build)
 
 ### Project Structure
 
 ```
-react-threejs-portfolio/
+muja-kayadan-portfolio/
 ├── src/
 │   ├── assets/          # Static assets (images, 3D models)
-│   │   ├── canvas/     # Three.js canvas components
-│   │   └── ...         # Other components
-│   ├── constants/      # Constants and configuration
-│   ├── hoc/           # Higher-order components
-│   ├── utils/         # Utility functions
-│   ├── App.tsx        # Main application component
-│   ├── main.tsx       # Application entry point
-│   └── styles.ts      # Global styles and types
-├── public/            # Public assets
-└── ...               # Config files
+│   ├── components/      # React components
+│   │   └── canvas/      # Three.js canvas components
+│   ├── config/          # Skills and asset configuration
+│   ├── context/         # Portfolio context provider
+│   ├── services/        # API clients (portfolio, chat)
+│   ├── test/            # Vitest tests
+│   └── utils/           # Utility functions
+├── public/              # Public assets and 3D models
+├── design/              # Architecture diagrams
+└── .github/workflows/   # CI and deploy pipelines
 ```
 
 ### Key Components
@@ -95,65 +134,54 @@ react-threejs-portfolio/
 
 - **Core Components**
   - `About.tsx`: About section with animations
-  - `Contact.tsx`: Contact form with email integration
+  - `ChatBot.tsx`: AI assistant chat widget
+  - `Contact.tsx`: Contact form (opens visitor email app via mailto)
   - `Hero.tsx`: Hero section with 3D elements
   - `Navbar.tsx`: Navigation component
 
-## 🧪 Quality Assurance
+## Quality Assurance
 
 ### Type Checking
 
-The project uses TypeScript for type safety. Run type checks:
 ```bash
 npm run ts:check
 ```
 
 ### Linting
 
-ESLint is configured for code quality. Run linting:
+ESLint configuration lives in `.eslintrc.js`.
+
 ```bash
 npm run lint
-# or fix issues automatically
 npm run lint:fix
 ```
 
-### Code Formatting
+### Testing
 
-Prettier is configured for consistent code style:
 ```bash
-npm run format
+npm run test
 ```
 
 ### Pre-commit Hooks
 
-Husky and lint-staged are configured to run checks before commits:
-- TypeScript type checking
-- ESLint
-- Prettier formatting
+Husky and lint-staged run ESLint and Prettier before commits.
 
-## 🚀 Deployment
+## Deployment
 
-### Building for Production
+Production deploys automatically to AWS S3 + CloudFront on pushes to `main` via `.github/workflows/deploy.yml`.
 
-1. Create a production build:
+CI runs on every push and pull request via `.github/workflows/ci.yml` (type check, lint, test, build).
+
+### Manual Build
+
 ```bash
 npm run build
-```
-
-2. Preview the build:
-```bash
 npm run preview
 ```
 
-### Deployment Options
+See `design/aws_architecture.mmd` for the current architecture diagram.
 
-The project can be deployed to:
-- GitHub Pages (configured in CI/CD)
-- Netlify
-- AWS S3 + CloudFront
-- Any static hosting service
-
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -164,6 +192,7 @@ The project can be deployed to:
 ### Commit Convention
 
 We follow the Conventional Commits specification:
+
 - `feat:` New features
 - `fix:` Bug fixes
 - `docs:` Documentation changes
@@ -172,22 +201,22 @@ We follow the Conventional Commits specification:
 - `test:` Adding or modifying tests
 - `chore:` Maintenance tasks
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
+- Original 3D portfolio template by [Sunny Patel](https://github.com/sunnypatell)
 - Three.js for 3D graphics capabilities
 - React Three Fiber for React integration
 - Framer Motion for animations
 - Tailwind CSS for styling
-- All other open-source contributors
 
-## 📞 Contact
+## Contact
 
-For questions or feedback, please reach out through:
+For questions or feedback:
+
 - GitHub Issues
 - Email: mujakayadan@outlook.com
-- LinkedIn: [Your LinkedIn Profile](https://linkedin.com/in/muja-kayadan)
-
+- LinkedIn: [Muja Kayadan](https://linkedin.com/in/muja-kayadan)

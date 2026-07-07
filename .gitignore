@@ -1,11 +1,6 @@
 node_modules
-.idea
 .env
-lambda-deploy.zip
-*.zip
 blog-mujakayadan
-.cursorignore
-.cursorrules
 
 /dist
 /build

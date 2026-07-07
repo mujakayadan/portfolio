@@ -62,6 +62,7 @@ export const mapYarbaPortfolio = (content: YarbaPortfolioContent): PortfolioData
     fullName,
     typedItems,
     profilePictureUrl: content.personal.profile_picture_url || DEFAULT_PROFILE_PICTURE,
+    email: content.personal.email,
     linkedin: content.personal.linkedin,
     github: content.personal.github,
     phone: content.personal.phone,

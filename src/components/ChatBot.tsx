@@ -118,7 +118,6 @@ const ChatBot = () => {
       setIsLoading(true);
 
       const data = await sendPortfolioChatMessage({
-        subdomain: import.meta.env.VITE_YARBA_PORTFOLIO_SUBDOMAIN,
         message: userMessage,
         conversation_id: conversationId,
         history: buildHistory(nextMessages.slice(0, -1)),

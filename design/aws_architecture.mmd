@@ -2,20 +2,28 @@ graph LR
     User((User)) --> Route53[Route 53 DNS]
     Route53 --> CloudFront[CloudFront CDN]
     CloudFront --> S3[S3 Bucket]
-    
+
+    User -->|Portfolio content + chat| YarbaAPI[YARBA API]
+    User -->|Contact form| EmailLambda[Lambda Email Handler]
+
     subgraph DNS["DNS Management"]
-        CheckDomain[CheckDomain.net] -->|Domain Transfer| Route53
         Route53 -->|DNS Records| ACM[ACM Certificate]
     end
-    
+
     subgraph Content["Content Delivery"]
         CloudFront -->|Origin Access Control| S3
         ACM -->|SSL Certificate| CloudFront
     end
-    
+
     subgraph Storage["Static Website"]
         S3 -->|index.html| React[React App]
         S3 -->|assets| Static[Static Files]
+    end
+
+    subgraph Backend["External Services"]
+        YarbaAPI -->|Portfolio sections| React
+        YarbaAPI -->|Chat responses| React
+        EmailLambda -->|SES / email| Contact[Contact Form]
     end
 
     style User fill:#f9f,stroke:#333,stroke-width:2px
@@ -23,4 +31,5 @@ graph LR
     style S3 fill:#FF9900,stroke:#333,stroke-width:2px
     style Route53 fill:#FF9900,stroke:#333,stroke-width:2px
     style ACM fill:#FF9900,stroke:#333,stroke-width:2px
-    style CheckDomain fill:#ddd,stroke:#333,stroke-width:2px
+    style YarbaAPI fill:#4A90D9,stroke:#333,stroke-width:2px
+    style EmailLambda fill:#FF9900,stroke:#333,stroke-width:2px

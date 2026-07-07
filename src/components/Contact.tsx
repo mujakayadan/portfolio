@@ -17,7 +17,6 @@ import {
   faEnvelope,
   faComment,
   faPaperPlane,
-  faSpinner,
   faPhone,
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -25,10 +24,9 @@ import { styles } from '../styles';
 import { usePortfolio } from '../context/PortfolioContext';
 import { SectionWrapper } from '../hoc';
 import { slideIn } from '../utils/motion';
+import { buildContactMailtoUrl } from '../utils/buildContactMailto';
 
 const EarthCanvas = lazy(() => import('./canvas/Earth'));
-
-const LAMBDA_EMAIL_URL = import.meta.env.VITE_LAMBDA_EMAIL_URL;
 
 interface ContactForm {
   name: string;
@@ -37,7 +35,7 @@ interface ContactForm {
 }
 
 const Contact = () => {
-  const { fullName, displayName, phone } = usePortfolio();
+  const { fullName, displayName, phone, email: ownerEmail } = usePortfolio();
   const formRef = useRef<HTMLFormElement>(null);
   const [form, setForm] = useState<ContactForm>({
     name: '',
@@ -45,7 +43,6 @@ const Contact = () => {
     message: '',
   });
 
-  const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [windowDimension, setWindowDimension] = useState({
@@ -72,52 +69,42 @@ const Contact = () => {
     setForm({ ...form, [name]: value });
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!form.name || !form.email || !form.message) {
-      toast.error('Please fill all fields before submitting. ⚠️', {
+      toast.error('Please fill all fields before submitting.', {
         duration: 3000,
         position: 'bottom-right',
       });
       return;
     }
 
-    setLoading(true);
-
-    try {
-      const response = await fetch(LAMBDA_EMAIL_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(form),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to send message');
-      }
-
-      setLoading(false);
-      setSuccess(true);
-      setForm({ name: '', email: '', message: '' });
-      toast.success('Message sent successfully!', {
-        duration: 3000,
+    if (!ownerEmail) {
+      toast.error('Email contact is unavailable right now. Try the chat widget instead.', {
+        duration: 4000,
         position: 'bottom-right',
       });
-      setShowConfetti(true);
-      setTimeout(() => {
-        setSuccess(false);
-        setShowConfetti(false);
-      }, 5000);
-    } catch (error) {
-      setLoading(false);
-      console.error(error);
-      toast.error('Something went wrong. Please try again.', {
-        duration: 3000,
-        position: 'bottom-right',
-      });
+      return;
     }
+
+    window.location.href = buildContactMailtoUrl(ownerEmail, {
+      visitorName: form.name,
+      visitorEmail: form.email,
+      message: form.message,
+    });
+
+    setSuccess(true);
+    setForm({ name: '', email: '', message: '' });
+    toast.success('Opening your email app… finish sending there.', {
+      duration: 4000,
+      position: 'bottom-right',
+    });
+    setShowConfetti(true);
+    setTimeout(() => {
+      setSuccess(false);
+      setShowConfetti(false);
+    }, 5000);
   };
 
   const handleConfettiComplete = useCallback(() => {
@@ -165,6 +152,18 @@ const Contact = () => {
         </div>
         <h3 className={styles.sectionHeadText}>Contact.</h3>
 
+        {ownerEmail && (
+          <p className="mt-4 text-secondary text-sm">
+            Prefer email directly?{' '}
+            <a
+              href={`mailto:${ownerEmail}`}
+              className="text-purple-400 hover:text-purple-300 transition-colors"
+            >
+              {ownerEmail}
+            </a>
+          </p>
+        )}
+
         <form ref={formRef} onSubmit={handleSubmit} className="mt-12 flex flex-col gap-8">
           <div className="flex flex-col sm:flex-row gap-8">
             <div className="flex-1">
@@ -207,7 +206,7 @@ const Contact = () => {
               name="message"
               value={form.message}
               onChange={handleChange}
-              placeholder={`Hey ${displayName}, love the website! I'd like to chat about some opportunities you might like! 🎉`}
+              placeholder={`Hey ${displayName}, love the website! I'd like to chat about some opportunities you might like!`}
               className="bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium transition-all duration-300 focus:ring-2 focus:ring-purple-500"
             />
           </label>
@@ -215,13 +214,10 @@ const Contact = () => {
           <button
             type="submit"
             className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 flex items-center justify-center"
-            disabled={loading}
           >
-            {loading ? (
-              <FontAwesomeIcon icon={faSpinner} spin />
-            ) : success ? (
+            {success ? (
               <span className="flex items-center">
-                Sent Successfully
+                Ready in your email app
                 <FontAwesomeIcon icon={faPaperPlane} className="ml-2" />
               </span>
             ) : (

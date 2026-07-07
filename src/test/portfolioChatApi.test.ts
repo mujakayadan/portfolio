@@ -12,9 +12,7 @@ describe('sendPortfolioChatMessage', () => {
     vi.stubEnv('VITE_YARBA_API_URL', '');
     vi.stubEnv('VITE_YARBA_PORTFOLIO_SUBDOMAIN', '');
 
-    await expect(
-      sendPortfolioChatMessage({ subdomain: 'ignored', message: 'Hello' })
-    ).rejects.toMatchObject({
+    await expect(sendPortfolioChatMessage({ message: 'Hello' })).rejects.toMatchObject({
       name: 'PortfolioChatApiError',
       status: 0,
     });
@@ -35,7 +33,6 @@ describe('sendPortfolioChatMessage', () => {
     );
 
     const result = await sendPortfolioChatMessage({
-      subdomain: 'ignored',
       message: 'What is your stack?',
       history: [{ role: 'user', content: 'Hi' }],
     });
@@ -63,7 +60,7 @@ describe('sendPortfolioChatMessage', () => {
       new Response('Chatbot is not enabled', { status: 403 })
     );
 
-    await expect(sendPortfolioChatMessage({ subdomain: 'muja', message: 'Hello' })).rejects.toEqual(
+    await expect(sendPortfolioChatMessage({ message: 'Hello' })).rejects.toEqual(
       expect.any(PortfolioChatApiError)
     );
   });
