@@ -58,7 +58,7 @@ const ComputersCanvas: React.FC = () => {
         <Canvas
           className="w-full h-full"
           frameloop={reducedMotion ? 'never' : 'demand'}
-          shadows={!isMobile}
+          shadows={!isMobile ? 'percentage' : false}
           dpr={isMobile ? [1, 1.5] : [1, 2]}
           camera={isMobile ? { position: [0, 0, 22], fov: 45 } : { position: [20, 3, 5], fov: 25 }}
           gl={{ preserveDrawingBuffer: true }}

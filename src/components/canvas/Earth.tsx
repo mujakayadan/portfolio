@@ -20,7 +20,6 @@ const EarthCanvas: React.FC = () => {
     <div ref={ref} className="w-full h-full">
       {inView && (
         <Canvas
-          shadows
           frameloop={reducedMotion ? 'never' : 'demand'}
           dpr={[1, 2]}
           gl={{ preserveDrawingBuffer: true }}
