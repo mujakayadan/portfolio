@@ -203,18 +203,18 @@ textarea::-webkit-scrollbar-thumb:hover {
 }
 
 /* Ensure links in user messages are properly visible */
-.bg-[#915EFF] a {
+.bg-chat-accent a {
   color: white !important;
   text-decoration: underline;
   opacity: 0.9;
 }
 
-.bg-[#915EFF] a:hover {
+.bg-chat-accent a:hover {
   opacity: 1;
 }
 
 /* Improve code block readability in user messages */
-.bg-[#915EFF] code {
+.bg-chat-accent code {
   background-color: rgba(255, 255, 255, 0.2);
   color: white;
 }

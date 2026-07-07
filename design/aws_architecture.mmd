@@ -1,10 +1,9 @@
 graph LR
-    User((User)) --> Route53[Route 53 DNS]
+    User((Visitor)) --> Route53[Route 53 DNS]
     Route53 --> CloudFront[CloudFront CDN]
     CloudFront --> S3[S3 Bucket]
 
     User -->|Portfolio content + chat| YarbaAPI[YARBA API]
-    User -->|Contact form| EmailLambda[Lambda Email Handler]
 
     subgraph DNS["DNS Management"]
         Route53 -->|DNS Records| ACM[ACM Certificate]
@@ -23,7 +22,7 @@ graph LR
     subgraph Backend["External Services"]
         YarbaAPI -->|Portfolio sections| React
         YarbaAPI -->|Chat responses| React
-        EmailLambda -->|SES / email| Contact[Contact Form]
+        React -->|Contact form mailto| EmailApp[Visitor Email App]
     end
 
     style User fill:#f9f,stroke:#333,stroke-width:2px
@@ -32,4 +31,4 @@ graph LR
     style Route53 fill:#FF9900,stroke:#333,stroke-width:2px
     style ACM fill:#FF9900,stroke:#333,stroke-width:2px
     style YarbaAPI fill:#4A90D9,stroke:#333,stroke-width:2px
-    style EmailLambda fill:#FF9900,stroke:#333,stroke-width:2px
+    style EmailApp fill:#888,stroke:#333,stroke-width:2px

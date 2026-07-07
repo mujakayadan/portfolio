@@ -1,5 +1,4 @@
 import { useState, useCallback } from 'react';
-import { Tilt } from 'react-tilt';
 import { motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
@@ -21,14 +20,7 @@ const ProjectCard = ({
   live_project_link,
 }: ProjectCardProps) => (
   <div className="w-full sm:w-[360px]">
-    <Tilt
-      options={{
-        max: 45,
-        scale: 1,
-        speed: 450,
-      }}
-      className="bg-tertiary p-5 rounded-2xl w-full"
-    >
+    <div className="bg-tertiary p-5 rounded-2xl w-full transition-transform duration-300 hover:[transform:perspective(1000px)_rotateX(4deg)_rotateY(-4deg)]">
       <div className="relative w-full h-[230px]">
         <img src={image} alt={name} className="w-full h-full object-cover rounded-2xl" />
 
@@ -74,7 +66,7 @@ const ProjectCard = ({
           </button>
         </a>
       )}
-    </Tilt>
+    </div>
   </div>
 );
 

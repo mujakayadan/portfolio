@@ -101,7 +101,7 @@ const Hero = () => {
         className={`absolute inset-x-0 top-[calc(env(safe-area-inset-top,0px)+5.5rem)] sm:top-[120px] bottom-28 sm:bottom-20 z-10 max-w-7xl mx-auto ${styles.paddingX} flex flex-col sm:flex-row items-start gap-3 sm:gap-5 pointer-events-none`}
       >
         <div className="hidden sm:flex flex-col justify-center items-center mt-5">
-          <div className="w-5 h-5 rounded-full bg-[#915EFF]" />
+          <div className="w-5 h-5 rounded-full bg-chat-accent" />
           <div className="w-1 sm:h-80 h-40 violet-gradient" />
         </div>
 

@@ -1,15 +1,24 @@
-import { defineConfig, UserConfig } from 'vite';
+import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
 
-const config: UserConfig = {
-  plugins: [react()],
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
   build: {
     assetsDir: 'assets',
     sourcemap: false,
     rollupOptions: {
       output: {
-        manualChunks: {
-          'three-vendor': ['three', '@react-three/fiber', '@react-three/drei'],
+        manualChunks(id) {
+          if (
+            id.includes('node_modules/three') ||
+            id.includes('node_modules/@react-three/fiber') ||
+            id.includes('node_modules/@react-three/drei')
+          ) {
+            return 'three-vendor';
+          }
+
+          return undefined;
         },
       },
     },
@@ -17,6 +26,4 @@ const config: UserConfig = {
   optimizeDeps: {
     include: ['three', '@react-three/fiber', '@react-three/drei'],
   },
-};
-
-export default defineConfig(config); 
+});

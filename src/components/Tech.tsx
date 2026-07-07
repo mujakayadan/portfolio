@@ -71,13 +71,13 @@ const Tech = () => {
     return () => window.removeEventListener('resize', calculateRowsForAllCategories);
   }, []);
 
-  const hexagonVariants: Variants = {
+  const hexagonVariants = (delay: number): Variants => ({
     hidden: { opacity: 0, scale: 0.8 },
     visible: {
       opacity: 1,
       scale: 1,
       transition: {
-        delay: Math.random() * 1.5,
+        delay,
         duration: 0.5,
         type: 'spring',
       },
@@ -87,7 +87,7 @@ const Tech = () => {
       zIndex: 2,
       transition: { duration: 0.3 },
     },
-  };
+  });
 
   const categoryTitleStyle = {
     fontFamily: "'', cursive",
@@ -124,11 +124,11 @@ const Tech = () => {
             key={`${categoryName}-row-${rowIndex}`}
             className={`honeycomb-row ${rowIndex % 2 === 1 ? 'staggered-row' : ''}`}
           >
-            {row.map(tech => (
+            {row.map((tech, techIndex) => (
               <motion.div
                 key={tech.name}
                 className="hexagon"
-                variants={hexagonVariants}
+                variants={hexagonVariants((rowIndex * 6 + techIndex) * 0.08)}
                 initial="hidden"
                 animate="visible"
                 whileHover="hover"

@@ -32,7 +32,7 @@ Live site: [mujakayadan.com](https://mujakayadan.com)
 
 ### Prerequisites
 
-- Node.js (v18 or higher)
+- Node.js 24+ (see `.nvmrc`)
 - npm
 - Git
 
@@ -180,6 +180,21 @@ npm run preview
 ```
 
 See `design/aws_architecture.mmd` for the current architecture diagram.
+
+## Troubleshooting
+
+**Chat not responding**
+
+- Verify `VITE_YARBA_API_URL` and `VITE_YARBA_PORTFOLIO_SUBDOMAIN` are set in production secrets
+- Confirm the YARBA site has chatbot enabled
+
+**Portfolio sections empty**
+
+- Verify `VITE_YARBA_API_URL` and `VITE_YARBA_PORTFOLIO_TOKEN`
+
+**Build issues**
+
+- Clear `dist/` and run `npm ci` before `npm run build`
 
 ## Contributing
 

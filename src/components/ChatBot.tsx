@@ -240,7 +240,7 @@ const ChatBot = () => {
                 <div
                   className={`max-w-[80%] break-words ${
                     message.role === 'user'
-                      ? 'bg-[#915EFF] text-white rounded-2xl rounded-tr-sm'
+                      ? 'bg-chat-accent text-white rounded-2xl rounded-tr-sm'
                       : 'bg-gray-200 text-gray-800 rounded-2xl rounded-tl-sm'
                   } ${message.isCalendarRelated ? 'calendar-message' : ''}`}
                   style={{ padding: '0.75rem 1rem' }}

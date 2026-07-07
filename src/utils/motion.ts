@@ -1,7 +1,7 @@
-import type { Variants } from 'framer-motion';
+import type { Transition, Variants } from 'framer-motion';
 
 type AnimationDirection = 'left' | 'right' | 'up' | 'down' | '';
-type AnimationType = 'spring' | 'tween' | string;
+type AnimationType = NonNullable<Transition['type']>;
 
 export const textVariant = (delay?: number): Variants => ({
   hidden: {
