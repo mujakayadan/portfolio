@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { styles } from '../styles';
 import { navLinks, type NavLink } from '../constants';
 import { usePortfolio } from '../context/PortfolioContext';
-const SITE_LOGO = '/favicon.webp';
+import { logo } from '../assets';
 
 const Navbar = () => {
   const { fullName } = usePortfolio();
@@ -91,7 +91,7 @@ const Navbar = () => {
             window.scrollTo(0, 0);
           }}
         >
-          <img src={SITE_LOGO} alt="logo" className="w-9 h-9 object-contain" />
+          <img src={logo} alt="logo" className="block h-9 w-9 shrink-0 object-contain" />
           <motion.p
             className="text-white text-[18px] font-bold cursor-pointer flex items-center"
             initial={{ opacity: 0, y: -20 }}
