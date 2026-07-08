@@ -11,7 +11,7 @@
   --color-chat-accent: #915eff;
   --shadow-card: 0px 35px 120px -15px #211e35;
   --breakpoint-xs: 390px;
-  --background-image-hero-pattern: linear-gradient(to bottom, #050816, #151030);
+  --background-image-hero-pattern: url('./assets/herobg.png');
 }
 
 .sr-only {
@@ -37,17 +37,20 @@
   white-space: normal;
 }
 
-* {
-  margin: 0;
-  padding: 0;
+*,
+*::before,
+*::after {
   box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
+}
+
+html {
   scroll-behavior: smooth;
   color-scheme: dark;
 }
 
-html,
 body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
   overflow-x: hidden;
 }
 

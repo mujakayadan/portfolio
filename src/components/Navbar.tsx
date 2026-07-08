@@ -91,7 +91,7 @@ const Navbar = () => {
             window.scrollTo(0, 0);
           }}
         >
-          <img src={logo} alt="logo" className="block h-9 w-9 shrink-0 object-contain" />
+          <img src={logo} alt="logo" className="h-9 w-9 shrink-0 object-contain" />
           <motion.p
             className="text-white text-[18px] font-bold cursor-pointer flex items-center"
             initial={{ opacity: 0, y: -20 }}

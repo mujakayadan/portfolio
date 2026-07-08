@@ -5,7 +5,6 @@ import { styles } from '../styles';
 import { type ExperienceEntry } from '../constants';
 import { usePortfolio } from '../context/PortfolioContext';
 import { SectionWrapper } from '../hoc';
-import { fadeIn } from '../utils/motion';
 
 interface ExperienceCardProps {
   experience: ExperienceEntry;
@@ -19,14 +18,16 @@ const ExperienceCard = memo(({ experience, isActive, onClick, index }: Experienc
 
   return (
     <motion.div
-      variants={fadeIn('right', 'spring', index * 0.1, 0.5)}
-      className={`flex items-center p-4 rounded-lg cursor-pointer transition-all duration-300 ${
-        isActive ? 'bg-tertiary' : 'bg-primary'
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.35, delay: index * 0.05 }}
+      className={`flex min-w-0 items-center rounded-lg p-4 cursor-pointer transition-all duration-300 ${
+        isActive ? 'bg-tertiary' : 'bg-black-100'
       }`}
       onClick={onClick}
     >
       <div
-        className={`flex-shrink-0 w-16 h-16 rounded-full overflow-hidden mr-4 flex items-center justify-center ${
+        className={`mr-4 flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full ${
           iconInset ? 'p-2' : ''
         }`}
         style={iconInset ? { backgroundColor: experience.iconBg ?? '#fff' } : undefined}
@@ -34,10 +35,10 @@ const ExperienceCard = memo(({ experience, isActive, onClick, index }: Experienc
         <img
           src={experience.icon}
           alt={experience.company_name}
-          className={`w-full h-full ${iconInset ? 'object-contain' : 'object-cover'}`}
+          className={`h-full w-full ${iconInset ? 'object-contain' : 'object-cover'}`}
         />
       </div>
-      <div>
+      <div className="min-w-0">
         <h3 className="text-white text-[18px] font-bold">{experience.title}</h3>
         <p className="text-secondary text-[14px]">{experience.company_name}</p>
       </div>
@@ -199,9 +200,9 @@ const Experience = () => {
         <h2 className={`${styles.sectionHeadText} text-center`}>Work Experience</h2>
       </motion.div>
 
-      <div className="mt-20 flex flex-col md:flex-row gap-10">
+      <div className="mt-20 flex flex-col gap-10 md:flex-row">
         <div className="md:w-1/3">
-          <div className="flex flex-col space-y-4">
+          <div className="flex flex-col gap-4">
             {experiences.map((experience, index) => (
               <ExperienceCard
                 key={`experience-${index}`}
